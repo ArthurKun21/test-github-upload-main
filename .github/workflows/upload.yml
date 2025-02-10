@@ -15,8 +15,8 @@ jobs:
           repository: 'ArthurKun21/test-github-upload-output'
           token: ${{ secrets.UPLOAD_REPO }}
           fetch-depth: 0
-          path: 'output'
-      
+          path: 'other-repo'
+                
       - name: Upload Directory
         run: |
           # Configure git
@@ -24,13 +24,13 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
           # Clean and copy files
-          cd output
+          cd other-repo
           rm -rf output || true  # Clean target directory
           cd ..
-          cp -r ./output/* output/
+          cp -r output other-repo/output
           
           # Commit and push changes
-          cd output
+          cd other-repo
           git add -A
           git commit -m "Upload output directory" || echo "No changes to commit"
           git push
