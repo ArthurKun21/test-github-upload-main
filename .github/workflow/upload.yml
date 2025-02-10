@@ -1,0 +1,38 @@
+name: Upload Directory to Target Repo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 'ArthurKun21/test-github-upload-output'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          path: 'output'
+      
+      - name: Upload Directory
+        run: |
+          # Configure git
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Clean and copy files
+          cd output
+          rm -rf output || true  # Clean target directory
+          cd ..
+          cp -r ./output/* output/
+          
+          # Commit and push changes
+          cd output
+          git add -A
+          git commit -m "Upload output directory" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
