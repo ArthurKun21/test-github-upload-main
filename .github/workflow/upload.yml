@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: 'ArthurKun21/test-github-upload-output'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.UPLOAD_REPO }}
           fetch-depth: 0
           path: 'output'
       
@@ -35,4 +35,4 @@ jobs:
           git commit -m "Upload output directory" || echo "No changes to commit"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.UPLOAD_REPO }}
