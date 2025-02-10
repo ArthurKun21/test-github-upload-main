@@ -35,8 +35,23 @@ jobs:
             git add -A
             git commit -m "Upload output directory"
             git push
+
+            echo "OUTPUT_CHANGES=true" >> $GITHUB_ENV
           else
             echo "No changes detected"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.UPLOAD_REPO }}
+      
+      - name: Trigger workflow in target repository
+        if: env.OUTPUT_CHANGES == 'true'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.UPLOAD_REPO }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'ArthurKun21',
+              repo: 'test-github-upload-output',
+              workflow_id: 'release.yml',  
+              ref: 'main'  
+            });
