@@ -29,10 +29,14 @@ jobs:
           cd ..
           cp -r output other-repo/output
           
-          # Commit and push changes
+          # Commit and push changes only if there are modifications
           cd other-repo
-          git add -A
-          git commit -m "Upload output directory" || echo "No changes to commit"
-          git push
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add -A
+            git commit -m "Upload output directory"
+            git push
+          else
+            echo "No changes detected"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.UPLOAD_REPO }}
